@@ -1,0 +1,41 @@
+<mt:Ignore>==============================
+
+VueComponents
+
+==============================</mt:Ignore>
+<mt:Ignore>VueCustomLink というコンポーネントのテンプレートを定義 = 「リンク」ボタンをクリックしたときに追加されるフィールドブロックのテンプレート</mt:Ignore>
+<script type="text/x-template" id="mf-component-customLink">
+    <div>
+        <div class="mb-4">
+            <label class="d-block">{{ item.customLinkTitle.label }}</label>
+            <VueText :item="item.customLinkTitle"></VueText>
+        </div>
+        <div class="mb-4">
+            <label class="d-block">{{ item.customLinkType.label }}</label>
+            <VueRadio :item="item.customLinkType"></VueRadio>
+        </div>
+        <div class="mb-4" v-if="item.customLinkType.data === 'pdf'">
+            <label class="d-block">{{ item.customLinkAssetId.label }}</label>
+            <VueAsset :item="item.customLinkAssetId"></VueAsset>
+        </div>
+        <div class="mb-4" v-else>
+            <label class="d-block">{{ item.customLinkUrl.label }}</label>
+            <VueText :item="item.customLinkUrl"></VueText>
+        </div>
+    </div>
+</script>
+
+<mt:Ignore>VueCustomLink というコンポーネントを定義（Vue.js）</mt:Ignore>
+<script>
+    Vue.component('VueCustomLink', {
+        props: { item: Object },
+        template: '#mf-component-customLink'
+    });
+</script>
+
+<mt:Ignore>type: 'customLink' のときに上記フィールドブロックが表示されるように MTAppjQuery に追加</mt:Ignore>
+<mt:SetVarBlock name="mtapp_mf_additional_fields" append="1">
+    <template v-else-if="item.type === 'customLink'">
+        <VueCustomLink :item="item"></VueCustomLink>
+    </template>
+</mt:SetVarBlock>
