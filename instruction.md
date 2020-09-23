@@ -32,6 +32,9 @@ https://www.dropbox.com/t/5HDopilyB4bBV2m5
 今回は下記のようなサイトを作成します。既存のサイトを利用する場合はわざわざ作る必要はありません。
 
 ```
+# サイトテーマ
+Mont-Blanc
+
 # サイト名
 【MT東京-71】MTAppjQuery サマーセミナー
 
