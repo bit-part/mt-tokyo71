@@ -1,0 +1,30 @@
+<mt:SetVarTemplate name="セクション見出し">
+    <h2><mt:NestVar name="item.data" /></h2>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="リンク">
+    <mt:IfNestVar name="item.customLinkType.data" eq="url">
+        <p><a href="<mt:NestVar name='item.customLinkUrl.data'>"><mt:NestVar name="item.customLinkTitle.data" /></a></p>
+    <mt:Else>
+        <mt:NestVar name="item.customLinkAssetId.data" setvar="asset_id" />
+        <mt:Asset id="$asset_id">
+            <p><a href="<mt:AssetURL>"><mt:NestVar name="item.customLinkTitle.data" /></a></p>
+        </mt:Asset>
+    </mt:IfNestVar>
+</mt:SetVarTemplate>
+
+<mt:SetVars>
+content_type_id =4
+content_field_id =20
+</mt:SetVars>
+<mt:Contents content_type="$content_type_id">
+    <mt:ContentField content_field="$content_field_id">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <mt:NestVar name="item.label" setvar="label" />
+        <mt:Var name="$label" />
+    </mt:Foreach>
+</mt:Contents>

@@ -95,6 +95,130 @@ UTC+9(日本標準時)
 
 ![](images/02-min.png)
 
+## 表示用のインデックステンプレートを作成
+
+- サイトの左サイドメニューの `デザイン > テンプレート` に移動
+- 右上のドロップダウンリストから「インデックステンプレート」を選んで「新規作成」をクリック
+- 下記の情報でインデックステンプレートを作成して
+
+```
+# テンプレート名
+マルチフィールド
+
+# テンプレートの内容
+マルチフィールド
+
+# 出力ファイル名
+index.html
+
+# テンプレートの種類
+カスタムインデックステンプレート
+```
+
+- テンプレートを保存
+- テンプレートを保存と再構築
+- 右サイドメニューの「公開されたテンプレート」をクリック
+
+```
+マルチフィールド
+```
+
+とだけ表示されれば成功
+
+## データの取り出し
+
+下記のテンプレートを上記のマルチフィールドテンプレートに貼り付けて「保存と再構築」をします。
+
+このテンプレートで、マルチフィールドに保存されている各フィールドブロックの名前（ `label` ）と種類（ `type` ）、そしてそのフィールドブロックのデータ（ `JSON` ）を確認できます。
+
+```
+<mt:Contents content_type="2" note="ご自身の環境に合わせて変更してください">
+    <mt:ContentField content_field="13" note="ご自身の環境に合わせて変更してください">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <h2><mt:NestVar name="item.type" />: <mt:NestVar name="item.label" /></h2>
+        <pre><mt:Var name="item" to_json="1"></pre>
+    </mt:Foreach>
+</ul>
+</mt:Contents>
+```
+
+### MTForeach
+
+配列を効率よくループすることができるブロックタグです。 `name` モディファイアで指定した配列の各アイテムを `as` モディファイアで指定した変数に格納してループします。
+
+```
+<mt:Foreach name="items" as="item">
+  do something
+</mt:Foreach>
+```
+
+### MTNestVar
+
+入れ子の配列・連想配列からドットシンタックスで効率よくデータを取得できます。 `name` モディファイアでドットシンタックスで階層が深い変数を効率よく取得します。
+
+```
+<mt:Foreach name="items" as="item">
+  <mt:NestVar name="item.data">
+</mt:Foreach>
+```
+
+これらのタグを利用して、各フィールドブロックの `type` や `label` で条件分岐して、各フィールドブロックの値を出力していきます。
+
+### 条件分岐で出力するパターン
+
+```
+<mt:Contents content_type="2">
+    <mt:ContentField content_field="13">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <mt:IfNestVar name="item.label" eq="見出し H1">
+            <h1><mt:NestVar name="item.data" /></h1>
+        </mt:IfNestVar>
+        <mt:IfNestVar name="item.label" eq="見出し H2">
+            <h2><mt:NestVar name="item.data" /></h2>
+        </mt:IfNestVar>
+        <mt:IfNestVar name="item.label" eq="複数行テキスト">
+            <p><mt:NestVar name="item.data" nl2br="html" /></p>
+        </mt:IfNestVar>
+    </mt:Foreach>
+</mt:Contents>
+```
+
+### SetVarTemplate で出力するパターン
+
+```
+<mt:SetVarTemplate name="見出し H1">
+    <h1><mt:NestVar name="item.data" /></h1>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="見出し H2">
+    <h2><mt:NestVar name="item.data" /></h2>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="複数行テキスト">
+    <p><mt:NestVar name="item.data" nl2br="html" /></p>
+</mt:SetVarTemplate>
+
+<mt:Contents content_type="2">
+    <mt:ContentField content_field="13">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <mt:NestVar name="item.label" setvar="label" />
+        <mt:Var name="$label" />
+    </mt:Foreach>
+</mt:Contents>
+```
+
 ## マルチフィールドで利用できるフィールドブロックの定義の構造
 
 マルチフィールドで利用できるフィールドブロックの定義は、 `fieldGroups` オプションで定義します。
@@ -231,3 +355,38 @@ UTC+9(日本標準時)
 ```
 
 ![](images/08-min.png)
+
+## テンプレートで出力
+
+```
+<mt:SetVarTemplate name="セクション見出し">
+    <h2><mt:NestVar name="item.data" /></h2>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="リンク">
+    <mt:IfNestVar name="item.customLinkType.data" eq="url">
+        <p><a href="<mt:NestVar name='item.customLinkUrl.data'>"><mt:NestVar name="item.customLinkTitle.data" /></a></p>
+    <mt:Else>
+        <mt:NestVar name="item.customLinkAssetId.data" setvar="asset_id" />
+        <mt:Asset id="$asset_id">
+            <p><a href="<mt:AssetURL>"><mt:NestVar name="item.customLinkTitle.data" /></a></p>
+        </mt:Asset>
+    </mt:IfNestVar>
+</mt:SetVarTemplate>
+
+<mt:SetVars>
+content_type_id =4
+content_field_id =20
+</mt:SetVars>
+<mt:Contents content_type="$content_type_id">
+    <mt:ContentField content_field="$content_field_id">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <mt:NestVar name="item.label" setvar="label" />
+        <mt:Var name="$label" />
+    </mt:Foreach>
+</mt:Contents>
+```
