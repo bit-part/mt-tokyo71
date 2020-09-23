@@ -1,0 +1,90 @@
+<mt:Ignore>==============================
+
+条件分岐で出力するパターン
+
+==============================</mt:Ignore>
+<mt:SetVars>
+content_type_id =2
+content_field_id =13
+</mt:SetVars>
+<mt:Contents content_type="$content_type_id">
+    <mt:ContentField content_field="$content_field_id">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <mt:IfNestVar name="item.label" eq="見出し H1">
+            <h1><mt:NestVar name="item.data" /></h1>
+        </mt:IfNestVar>
+        <mt:IfNestVar name="item.label" eq="見出し H2">
+            <h2><mt:NestVar name="item.data" /></h2>
+        </mt:IfNestVar>
+        <mt:IfNestVar name="item.label" eq="複数行テキスト">
+            <p><mt:NestVar name="item.data" nl2br="html" /></p>
+        </mt:IfNestVar>
+        <mt:IfNestVar name="item.label" eq="2段組コンテンツ">
+            <mt:Foreach name="item.data" as="column">
+                <mt:Foreach name="column" as="block">
+                    <mt:IfNestVar name="block.label" eq="小見出し">
+                        <h3><mt:NestVar name="block.data" /></h3>
+                    </mt:IfNestVar>
+                    <mt:IfNestVar name="block.label" eq="本文">
+                        <mt:NestVar name="block.data" />
+                    </mt:IfNestVar>
+                </mt:Foreach>
+            </mt:Foreach>
+        </mt:IfNestVar>
+    </mt:Foreach>
+</mt:Contents>
+
+<mt:Ignore>==============================
+
+SetVarTemplate で出力するパターン
+
+==============================</mt:Ignore>
+<mt:SetVarTemplate name="見出し H1">
+    <h1><mt:NestVar name="item.data" /></h1>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="見出し H2">
+    <h2><mt:NestVar name="item.data" /></h2>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="複数行テキスト">
+    <p><mt:NestVar name="item.data" nl2br="html" /></p>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="小見出し">
+    <h3><mt:Var name="data" /></h3>
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="本文">
+    <mt:Var name="data" />
+</mt:SetVarTemplate>
+
+<mt:SetVarTemplate name="2段組コンテンツ">
+    <mt:Foreach name="item.data" as="column">
+        <mt:Foreach name="column" as="block">
+            <mt:NestVar name="block.label" setvar="label" />
+            <mt:NestVar name="block.data" setvar="data" />
+            <mt:Var name="$label" />
+        </mt:Foreach>
+    </mt:Foreach>
+</mt:SetVarTemplate>
+
+<mt:SetVars>
+content_type_id =2
+content_field_id =13
+</mt:SetVars>
+<mt:Contents content_type="$content_type_id">
+    <mt:ContentField content_field="$content_field_id">
+        <mt:ContentFieldValue convert_breaks="0" json_decode="1" setvar="json" />
+        <mt:Var name="json" key="items" setvar="items" />
+    </mt:ContentField>
+
+    <mt:Foreach name="items" as="item">
+        <mt:NestVar name="item.label" setvar="label" />
+        <mt:Var name="$label" />
+    </mt:Foreach>
+</mt:Contents>
