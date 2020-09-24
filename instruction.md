@@ -3,7 +3,7 @@
 ## プラグインのインストール
 
 下記のリンクから zip ファイルをダウンロードして展開します。  
-https://www.dropbox.com/t/5HDopilyB4bBV2m5
+https://www.dropbox.com/sh/3lnh7jwy18fm1a1/AAAo-8Esxf11NEHWnd0kSXF3a?dl=0
 
 `plugins` ディレクトリ内の `MTAppjQuery` `DataAPIProxy` `PlainTextField` プラグインをアップロードします。
 
