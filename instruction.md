@@ -195,6 +195,11 @@ UTC+9(日本標準時)
 intro.js を使ってチュートリアル機能を実装してみます。
 
 ```
+<script src="https://cdn.jsdelivr.net/npm/intro.js@2.9.3/intro.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js@2.9.3/introjs.css">
+```
+
+```
 (function ($) {
     'use strict';
     
