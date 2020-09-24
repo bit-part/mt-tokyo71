@@ -79,7 +79,7 @@ UTC+9(日本標準時)
 1. 右サイドメニューの `user.jsとuser.cssをインストール` をクリック
 1. インデックステンプレートにインストールされた `user.css` `user.js` を選択して「公開」をクリック
 
-## カスタマイズの練習 1
+## カスタマイズの練習 1 : 簡単なメソッドを利用
 
 データ識別ラベルは任意の必須のフィールドの値を自動で入れることができます。
 例えば、書籍データを管理するコンテンツタイプでは、書名や ISBN コードをデータ識別ラベルとして利用することが考えられます。
@@ -112,7 +112,7 @@ UTC+9(日本標準時)
 
 で囲むことを忘れないようにしてください。
 
-## カスタマイズの練習 2
+## カスタマイズの練習 2 : 独自の JavaScript でカスタマイズ
 
 次は、MTAppjQuery が提供するメソッドではなく、独自のコードでカスタマイズしてみましょう。
 
@@ -143,7 +143,7 @@ UTC+9(日本標準時)
 
 ![](images/data-label-enlarge-min.png)
 
-## カスタマイズの練習 3
+## カスタマイズの練習 3 : 人気メソッドで複数のフィールドをタブでまとめる
 
 次は、複数のフィールドをタブで表示してみます。
 
@@ -168,9 +168,64 @@ UTC+9(日本標準時)
 })(jQuery);
 ```
 
+## カスタマイズの練習 4 : 開発/本番を間違える事故をなくそう
 
+開発環境と本番環境がある場合、どちらの環境で作業しているかをわかるようにしてみます。
 
-## マルチフィールドの利用
+```
+(function ($) {
+    'use strict';
+    
+    switch (location.hostname) {
+        case 'movabletype.vagrant': {
+            $('body').prepend('<div class="alert alert-info text-center m-0 h1">開発 / Development</div>');
+            break;
+        }
+        case 'movabletype.nz': {
+            $('body').prepend('<div class="alert alert-danger text-center m-0 h1">本番 / Production</div>');
+            break;
+        }
+    }
+
+})(jQuery);
+```
+
+## カスタマイズの練習 5 : JavaScript ライブラリを利用
+
+intro.js を使ってチュートリアル機能を実装してみます。
+
+```
+(function ($) {
+    'use strict';
+    
+    $('[name="data_label"]').attr({
+        'data-step': 1,
+        'data-intro': 'タイトルを入力してください。'
+    });
+    $('[name="content-field-21"]').attr({
+        'data-step': 2,
+        'data-intro': 'キャッチコピーを入力してください。'
+    });
+    $('[name="content-field-22"]').attr({
+        'data-step': 3,
+        'data-intro': '詳細情報を入力してください。'
+    });
+    $('[name="status"]').attr({
+        'data-step': 4,
+        'data-intro': 'ステータスを選択してください。'
+    });
+    $('[type="submit"].primary').attr({
+        'data-step': 5,
+        'data-intro': '保存/公開してください。'
+    });
+    introJs().start();
+
+})(jQuery);
+```
+
+## カスタマイズの練習 5 : 目玉機能のマルチフィールドの利用
+
+マルチフィールドとは？ => https://youtu.be/o8lDNUNJgqg
 
 1. `user.js` の編集画面を開く
 1. 右サイドメニューの「コンテンツタイプ」で「サンプル」を選択
@@ -330,7 +385,12 @@ index.html
 
 ![](images/03-min.png)
 
-## 作成するフィールドの定義を追加
+## カスタマイズの練習 6 : 【中・上級編】マルチフィールドに独自のフィールドを追加する
+
+- リンクのタイトルを入力
+- リンク先を URL で指定するか、アップロードした PDF ファイルにリンクするかを選べる
+
+### 作成するフィールドの定義を追加
 
 ```
 (function($){
@@ -381,7 +441,7 @@ index.html
 
 ![](images/04-min.png)
 
-## `VueComponents` というグローバルテンプレートモジュールを作成
+### `VueComponents` というグローバルテンプレートモジュールを作成
 
 - ブラウザの別タブでシステムメニューを表示
 - システムメニューの左サイドメニューの `デザイン > グローバルテンプレート` に移動
@@ -391,7 +451,7 @@ index.html
 
 ![](images/05-min.png)
 
-## `VueComponents` グローバルテンプレートモジュールを編集
+### `VueComponents` グローバルテンプレートモジュールを編集
 
 カスタムリンク・フィールドブロックの大枠を定義した下記の内容をコピペして保存
 
@@ -427,7 +487,7 @@ index.html
 
 ![](images/07-min.png)
 
-## `VueCustomLink` コンポーネントの中身を作成
+### `VueCustomLink` コンポーネントの中身を作成
 
 ```
 <script type="text/x-template" id="mf-component-customLink">
@@ -454,7 +514,7 @@ index.html
 
 ![](images/08-min.png)
 
-## テンプレートで出力
+### テンプレートで出力
 
 ```
 <mt:SetVarTemplate name="セクション見出し">
